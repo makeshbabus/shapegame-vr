@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, AppRegistry, StyleSheet } from 'react-vr';
+import { View, Text, AppRegistry, StyleSheet, AsyncStorage } from 'react-vr';
 
 import Shape, { shapes } from './vr/components/Shape';
 
@@ -15,17 +15,23 @@ class ShapeGame extends Component {
   }
 
   componentDidMount() {
+    AsyncStorage.getItem('score')
+      .then(value => {
+        console.log('score', value);
+        this.setState({ score: value });
+      })
     this.newGameSet();
   }
 
-  pickShape(shapeIndex){
+  pickShape(shapeIndex) {
     console.log('shapeIndex', shapeIndex);
 
     let score = this.state.score;
-    score= this.state.specialIndex === shapeIndex? score + 1 : score - 1;
+    score = this.state.specialIndex === shapeIndex ? score + 1 : score - 1;
 
-    this.setState({score});
+    this.setState({ score });
 
+    AsyncStorage.setItem('score', score);
     this.newGameSet();
   }
 
@@ -36,26 +42,26 @@ class ShapeGame extends Component {
     console.log("baseShapeId", baseShapeId);
 
     let specialShapeId = baseShapeId;
-    while(specialShapeId === baseShapeId){
+    while (specialShapeId === baseShapeId) {
       specialShapeId = Math.floor(Math.random() * shapes.length);
-    }    
+    }
 
     console.log('specialShapeId', specialShapeId);
 
     let newGameShapes = [];
-    for(let i=0; i<this.state.gameShapes.length; i++){
-      newGameShapes[i]= baseShapeId;
+    for (let i = 0; i < this.state.gameShapes.length; i++) {
+      newGameShapes[i] = baseShapeId;
     }
 
-    console.log("newGameShapes",newGameShapes)
+    console.log("newGameShapes", newGameShapes)
 
-    let specialIndex = Math.floor(Math.random()*newGameShapes.length)
+    let specialIndex = Math.floor(Math.random() * newGameShapes.length)
     newGameShapes[specialIndex] = specialShapeId;
 
-    console.log("newGameShapes",newGameShapes)
+    console.log("newGameShapes", newGameShapes)
 
     this.setState({
-      gameShapes: newGameShapes, 
+      gameShapes: newGameShapes,
       specialIndex: specialIndex
     });
   }
@@ -72,7 +78,7 @@ class ShapeGame extends Component {
         {this.state.gameShapes.map((shape, index) => {
           return (
             <View key={index}
-            onEnter={()=>this.pickShape(index)}>
+              onEnter={() => this.pickShape(index)}>
               <Shape
                 shapeNum={shape}
                 colorNum={index}
