@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Box, Sphere, Cylinder } from 'react-vr';
 
 const shapes = [Box, Sphere, Cylinder];
+export { shapes };
 
 export default class Shape extends Component {
     render() {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, AppRegistry, StyleSheet } from 'react-vr';
 
-import Shape from './vr/components/Shape';
+import Shape, { shapes } from './vr/components/Shape';
 
 class ShapeGame extends Component {
   constructor() {
@@ -11,6 +11,39 @@ class ShapeGame extends Component {
       gameShapes: [1, 1, 1, 1]
     }
   }
+
+  componentDidMount() {
+    this.newGameSet();
+  }
+
+  newGameSet() {
+    console.log("New game set!");
+
+    let baseShapeId = Math.floor(Math.random() * shapes.length);
+    console.log("baseShapeId", baseShapeId);
+
+    let specialShapeId = baseShapeId;
+    while(specialShapeId === baseShapeId){
+      specialShapeId = Math.floor(Math.random() * shapes.length);
+    }    
+
+    console.log('specialShapeId', specialShapeId);
+
+    let newGameShapes = [];
+    for(let i=0; i<this.state.gameShapes.length; i++){
+      newGameShapes[i]= baseShapeId;
+    }
+
+    console.log("newGameShapes",newGameShapes)
+
+    let specialIndex = Math.floor(Math.random()*newGameShapes.length)
+    newGameShapes[specialIndex] = specialShapeId;
+
+    console.log("newGameShapes",newGameShapes)
+
+    this.setState({gameShapes: newGameShapes});
+  }
+
   render() {
     return (
       <View style={styles.game}>
